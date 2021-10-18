@@ -14,6 +14,9 @@ def search_index():
     wanted_language = request.headers.get('x-wanted-language', 'ko')
     search_keyword = parameter_dict.get('query', '')
 
+    if wanted_language == '':
+        return jsonify({"error": "require x-wanted-language"}), 404
+
     if search_keyword == '':
         return jsonify({"error": "not found"}), 404
 
