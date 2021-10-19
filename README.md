@@ -35,9 +35,9 @@ ____
 ## API 리스트
 | domain | url | method | desc |
 | ------ | ------ | ------ | ------ |
-| company | /companies/\<str> | get | 회사 검색 |
-|  | /companies | post | 회사 / 태그 등록 |
-|  | /search?query=\<str> | get | 회사 이름 검색  |
+| company | /companies/\<str> | get | 회사 이름으로 회사 검색 |
+|  | /companies | post | 새로운 회사 추가 |
+|  | /search?query=\<str> | get | 회사명 자동완성  |
 
 
 
@@ -48,11 +48,7 @@ ____
 ## TODO
 - init data : https://flask.palletsprojects.com/en/2.0.x/tutorial/database/
 - pytest init data
-- wanning 잡기
 - docker-compose 실행 / 테스트 
 - 테스트 추가
-- app 이름을 뭘로 해야 할까?
-- 데코레이터 가능한지 확인
-- 유틸로 뺄것들 확인하기
-
-- language 테이블 추가 -> 시간 남으면 
+- language 테이블 추가
+ 

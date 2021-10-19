@@ -1,9 +1,11 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
+from typing import *
 from datetime import datetime
 
 from app import db, app
+from app.models.util import get_or_create
 
 
 class CompanyInfo(db.Model):
@@ -42,3 +44,20 @@ class CompanyInfo(db.Model):
         except Exception as e:
             app.logger.error(e)
             return {"error": "company not found"}, True
+
+    @staticmethod
+    def create_relation_company_info(company_name_for_language: dict, company_instance: object, tag_instances: dict):
+        for language in company_name_for_language:
+            company_info_data = {
+                "language": language,
+                "name": company_name_for_language[language]
+            }
+
+            instance, instance_exist = get_or_create(db.session, CompanyInfo, **company_info_data)
+            if not instance_exist:
+                raise AssertionError("company existed")
+
+            instance.company = company_instance
+            for tag_instance in tag_instances[language]:
+                instance.tag.append(tag_instance)
+            db.session.add(instance)

@@ -1,17 +1,14 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
-from collections import defaultdict
-
 from flask import jsonify, request
+from sqlalchemy.orm.exc import NoResultFound
 
 from app import app, db
 from app.models.company import Company
 from app.models.company_info import CompanyInfo
 from app.models.tag import Tag
-from app.models.util import get_or_create
 from app.validtors.company import CompanyPostSchema, CompanyGetSchema
-from sqlalchemy.orm.exc import NoResultFound
 
 
 @app.route('/companies/<companyName>', methods=['get'])
@@ -48,64 +45,27 @@ def get_company(companyName):
 def create_company():
     wanted_language = request.headers.get('x-wanted-language', 'ko')
 
-    params_json = request.get_json()
-    params_json['wanted_language'] = wanted_language
+    params_data = request.get_json()
+    params_data['wanted_language'] = wanted_language
+
+    error = CompanyPostSchema().validate(data=params_data)
+    if error:
+        return jsonify({"error": str(error)}), 400
 
     try:
-        error = CompanyPostSchema().validate(data=params_json)
-        if error:
-            raise ValueError(error)
-
-    except ValueError as e:
-        return jsonify({"error": e}), 400
-
-    try:
-        company = Company()
-
-        tags = params_json.get('tags', {})
-
-        tag_name = defaultdict(list)
-        for dict_tag_name in tags:
-            for key in dict_tag_name['tag_name'].keys():
-                name = dict_tag_name['tag_name'][key]
-                language = key
-
-                d = {'name': name, 'language': language}
-                instance, _ = get_or_create(db.session, Tag, **d)
-                tag_name[key].append(instance)
-
-        company_name = params_json.get('company_name', {})
-        for language in company_name:
-            d = {
-                "language": language,
-                "name": company_name[language]
-            }
-
-            instance, instance_exist = get_or_create(db.session, CompanyInfo, **d)
-            if not instance_exist:
-                raise IOError("company existed")
-
-            instance.company = company
-            for t in tag_name[language]:
-                instance.tag.append(t)
-            db.session.add(instance)
-
-        db.session.commit()
-    except IOError as e:
-        app.logger.error(e)
-        # db.session.rollback()
-
+        Company.create_company(params_data, Tag.create_tags, CompanyInfo.create_relation_company_info)
     except Exception as e:
         app.logger.error(e)
         db.session.rollback()
-        return jsonify({"error": "company duplication"}), 400
+        return jsonify({"error": "company parameter error"}), 400
 
+    company_name = params_data.get('company_name', {})
     query = {
         "name": company_name[wanted_language],
         "language": wanted_language
     }
-    instance, error = CompanyInfo.company_info_find_query(**query)
+    company_info_instance, error = CompanyInfo.company_info_find_query(**query)
     if error:
         return jsonify({"error": "not found"}), 404
 
-    return jsonify(instance.as_dict())
+    return jsonify(company_info_instance.as_dict())

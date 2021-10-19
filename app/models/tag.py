@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-
+from collections import defaultdict
 from app import db
+from app.models.util import get_or_create
 
 
 class Tag(db.Model):
@@ -25,3 +26,18 @@ class Tag(db.Model):
 
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns}
+
+    @staticmethod
+    def create_tags(tags):
+
+        dict_language_tags = defaultdict(list)
+        for dict_tag_name in tags:
+            for key in dict_tag_name['tag_name'].keys():
+                name = dict_tag_name['tag_name'][key]
+                language = key
+
+                d = {'name': name, 'language': language}
+                instance, _ = get_or_create(db.session, Tag, **d)
+                dict_language_tags[key].append(instance)
+
+        return dict_language_tags
