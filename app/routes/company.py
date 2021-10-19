@@ -5,29 +5,32 @@ from app import app, db
 from flask import jsonify, request, make_response
 from app.models.company import Company
 from app.models.tag import Tag
+from app.models.company_info import CompanyInfo
 from collections import defaultdict
 from app.models.util import get_or_create
 
 
-@app.route('/company/<companyName>', methods=['get'])
+@app.route('/companies/<companyName>', methods=['get'])
 def get_company(companyName):
-    wanted_language = request.headers.get('x-wanted-language', 'ko')
+    # TODO 데코레이터로 안되나?
+    wanted_language = request.headers.get('x-wanted-language', '')
+
+    if wanted_language == '':
+        return jsonify({"error": "require x-wanted-language"}), 404
 
     # 검색
     try:
-        company = Company.query.filter_by(name=companyName, language=wanted_language).first()
+        company_info = CompanyInfo.query.filter_by(name=companyName).first()
+        company_info = CompanyInfo.query.filter_by(company=company_info.company, language=wanted_language).first()
     except Exception as e:
-        print(e)
-        return jsonify({"error": "company not found"}), 400
-
-    if not company:
-        return jsonify({"error": "not found"}), 404
+        app.logger.error(e)
+        return jsonify({"error": "company not found"}), 404
 
     # TODO 태그 리스트
-    return jsonify(company.as_dict())
+    return jsonify(company_info.as_dict())
 
 
-@app.route('/company', methods=['post'])
+@app.route('/companies', methods=['post'])
 def create_company():
     wanted_language = request.headers.get('x-wanted-language', 'ko')
 
@@ -35,10 +38,14 @@ def create_company():
         return jsonify({"error": "require x-wanted-language"}), 404
 
     # TODO 진짜 이렇게만 하면 되나?
+    print(type(request.data))
     params_json = request.get_json()
+    print(params_json)
 
-    # 깔끔하게 할수 없나?
+    # TODO 깔끔하게 할수 없나? 함수로 빼기
     try:
+        company = Company()
+
         tags = params_json.get('tags', {})
 
         tag_name = defaultdict(list)
@@ -58,27 +65,30 @@ def create_company():
                 "name": company_name[language]
             }
 
-            instance, _ = get_or_create(db.session, Company, **d)
+            instance, instance_exist = get_or_create(db.session, CompanyInfo, **d)
+            if not instance_exist:
+                raise IOError("company existed")
 
+            instance.company = company
             for t in tag_name[language]:
                 instance.tag.append(t)
             db.session.add(instance)
 
         db.session.commit()
-
     except Exception as e:
-        print(e)
-        return jsonify({"error": "company save error"}), 400
+        app.logger.error(e)
+        db.session.rollback()
+        return jsonify({"error": "company duplication"}), 400
 
+    # TODO 하나로 묶을수 있지 않을까?
     try:
-        company = Company.query.filter_by(name=company_name[wanted_language], language=wanted_language).first()
+        company_info = CompanyInfo.query.filter_by(name=company_name[wanted_language], language=wanted_language).first()
+        print(company_info)
     except Exception as e:
-        print(e)
+        app.logger.error(e)
         return jsonify({"error": "company not found"}), 400
 
-    # 저장 후 출력
-    if not company:
+    if not company_info:
         return jsonify({"error": "not found"}), 404
 
-    # TODO 태그 리스트
-    return jsonify(company.as_dict())
+    return jsonify(company_info.as_dict())

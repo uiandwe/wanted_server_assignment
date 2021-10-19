@@ -5,7 +5,8 @@ from flask import jsonify, request
 from sqlalchemy import and_
 
 from app import app
-from app.models.company import Company
+from app.models.company_info import CompanyInfo
+
 
 
 @app.route('/search', methods=['get'])
@@ -21,13 +22,13 @@ def search_index():
         return jsonify({"error": "not found"}), 404
 
     try:
-        companies = Company.query.filter(
-            and_(Company.name.like('%' + search_keyword + '%'), Company.language == wanted_language)).all()
+        company_infos = CompanyInfo.query.filter(
+            and_(CompanyInfo.name.like('%' + search_keyword + '%'), CompanyInfo.language == wanted_language)).all()
     except Exception as e:
-        print(e)
+        app.logger.error(e)
         return jsonify({"error": "company not found"}), 400
 
-    if len(companies) == 0:
+    if len(company_infos) == 0:
         return jsonify({"error": "not found"}), 404
 
-    return jsonify([{"company_name": company.name} for company in companies])
+    return jsonify([{"company_name": company_info.name} for company_info in company_infos])
