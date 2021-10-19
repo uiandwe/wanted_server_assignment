@@ -3,7 +3,7 @@
 
 ## init load data
 ```sh
-$ python manage_local.py loaddata ./blog/fixtures/blog.json
+$ flask init-db
 ```
 
 ## run test
@@ -43,10 +43,15 @@ ____
 
 
 ## TODO
+- init data : https://flask.palletsprojects.com/en/2.0.x/tutorial/database/
+- pytest init data
+- pytest 통과 
+- 시리얼라이져
+- 테스트 추가
+- app 이름을 뭘로 해야 할까?
+- wanning 잡기
 - .env 로 디비 파라미터 빼기
 - 로깅
 - 유틸로 뺄것들 확인하기
-- 같은 이름일때 처리 + 같은 나라일때 처리 + 유니크를 어떻게 줘야 하나? -> 이름 + 나라
-- language 테이블 추가 
-- 전체 소스 로직 통일 (구조)
+- language 테이블 추가 -> 시간 남으면 
 - 
