@@ -49,6 +49,5 @@ ____
 - init data : https://flask.palletsprojects.com/en/2.0.x/tutorial/database/
 - pytest init data
 - docker-compose 실행 / 테스트 
-- 테스트 추가
 - language 테이블 추가
  

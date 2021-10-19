@@ -11,5 +11,12 @@ def api():
     return app.test_client()
 
 
-def test_company2(api):
-    assert 1 == 2
+def test_search_paramas(api):
+    resp = api.get(
+        "/search", headers=[("x-wanted-language", "ko")]
+    )
+
+    assert resp.status_code == 400
+    error_message = json.loads(resp.data.decode("utf-8"))
+    assert str(error_message['error']).find('not found') > 0
+

@@ -13,7 +13,6 @@ from app.validtors.company import CompanyPostSchema, CompanyGetSchema
 
 @app.route('/companies/<companyName>', methods=['get'])
 def get_company(companyName):
-    # TODO 데코레이터로 안되나?
     wanted_language = request.headers.get('x-wanted-language', '')
 
     try:
@@ -60,6 +59,9 @@ def create_company():
         return jsonify({"error": "company parameter error"}), 400
 
     company_name = params_data.get('company_name', {})
+    if wanted_language not in company_name.keys():
+        return jsonify({"error": "not found"}), 404
+
     query = {
         "name": company_name[wanted_language],
         "language": wanted_language
