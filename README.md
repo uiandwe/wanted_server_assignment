@@ -34,18 +34,10 @@ ____
 ____
 
 
-## DB
-| domain | url | method | desc |
-| ------ | ------ | ------ | ------ |
-| company | /companies/\<str> | get | 회사 검색 |
-|  | /companies | post | 회사 / 태그 등록 |
-|  | /search?query=\<str> | get | 회사 이름 검색  |
-
 
 ## TODO
 - init data : https://flask.palletsprojects.com/en/2.0.x/tutorial/database/
 - pytest init data
-- pytest 통과 
 - 시리얼라이져
 - 테스트 추가
 - app 이름을 뭘로 해야 할까?

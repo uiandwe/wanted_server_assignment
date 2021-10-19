@@ -1,12 +1,14 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
-from app import app, db
-from flask import jsonify, request, make_response
-from app.models.company import Company
-from app.models.tag import Tag
-from app.models.company_info import CompanyInfo
 from collections import defaultdict
+
+from flask import jsonify, request
+
+from app import app, db
+from app.models.company import Company
+from app.models.company_info import CompanyInfo
+from app.models.tag import Tag
 from app.models.util import get_or_create
 
 
@@ -75,6 +77,10 @@ def create_company():
             db.session.add(instance)
 
         db.session.commit()
+    except IOError as e:
+        app.logger.error(e)
+        db.session.rollback()
+
     except Exception as e:
         app.logger.error(e)
         db.session.rollback()
@@ -83,7 +89,6 @@ def create_company():
     # TODO 하나로 묶을수 있지 않을까?
     try:
         company_info = CompanyInfo.query.filter_by(name=company_name[wanted_language], language=wanted_language).first()
-        print(company_info)
     except Exception as e:
         app.logger.error(e)
         return jsonify({"error": "company not found"}), 400

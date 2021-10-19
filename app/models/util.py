@@ -1,8 +1,8 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 def get_or_create(session, model, defaults=None, **kwargs):

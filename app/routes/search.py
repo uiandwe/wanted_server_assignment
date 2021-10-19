@@ -8,7 +8,6 @@ from app import app
 from app.models.company_info import CompanyInfo
 
 
-
 @app.route('/search', methods=['get'])
 def search_index():
     parameter_dict = request.args.to_dict()

@@ -1,8 +1,9 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
-from app import db
 from datetime import datetime
+
+from app import db
 
 
 class Company(db.Model):
