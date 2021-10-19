@@ -12,13 +12,15 @@ $ docker-compose up
 
 
 ## init load data
+- 테이블 drop 후 테이블 생성 (기존 데이터가 지워집니다.)
 ```sh
-$ flask init-db
+$ flask init-db 
 ```
 
 ## run test
+- 테스트를 위해 초기 데이터가 필요합니다.
 ```sh
-$ pytest
+$ flask init-db && pytest
 ```
 
 
