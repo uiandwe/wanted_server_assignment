@@ -7,8 +7,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from app import app, db
 from app.models.company import Company
 from app.models.company_info import CompanyInfo
-from app.models.tag import Tag
 from app.models.language import Language
+from app.models.tag import Tag
 from app.validtors.company import CompanyPostSchema, CompanyGetSchema
 
 

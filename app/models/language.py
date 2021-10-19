@@ -18,4 +18,4 @@ class Language(db.Model):
         self.created = datetime.now()
 
     def __repr__(self):
-        return 'id : %s, name : %s' % (self.id, self.name, )
+        return 'id : %s, name : %s' % (self.id, self.name)

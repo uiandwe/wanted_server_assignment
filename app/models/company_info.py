@@ -1,12 +1,11 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
-from typing import *
 from datetime import datetime
 
 from app import db, app
-from app.models.util import get_or_create
 from app.models.language import Language
+from app.models.util import get_or_create
 
 
 class CompanyInfo(db.Model):

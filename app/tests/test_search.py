@@ -1,7 +1,8 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
-import pytest
 import json
+
+import pytest
 
 from app import app
 
@@ -27,4 +28,3 @@ def test_search_paramas(api):
     assert resp.status_code == 400
     error_message = json.loads(resp.data.decode("utf-8"))
     assert str(error_message['error']).find('not found') > 0
-

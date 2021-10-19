@@ -6,8 +6,8 @@ from sqlalchemy import and_
 
 from app import app
 from app.models.company_info import CompanyInfo
-from app.validtors.search import SearchGetSchema
 from app.models.language import Language
+from app.validtors.search import SearchGetSchema
 
 
 @app.route('/search', methods=['get'])

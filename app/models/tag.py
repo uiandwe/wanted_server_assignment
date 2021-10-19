@@ -1,11 +1,12 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
 from collections import defaultdict
+from datetime import datetime
+
 from app import db
-from app.models.util import get_or_create
 from app.models.language import Language
+from app.models.util import get_or_create
 
 
 class Tag(db.Model):

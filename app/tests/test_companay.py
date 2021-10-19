@@ -1,7 +1,8 @@
 #!/usr/bin/env Python
 # -*- coding: utf-8 -*-
-import pytest
 import json
+
+import pytest
 
 from app import app
 
