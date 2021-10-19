@@ -14,9 +14,6 @@ class Tag(db.Model):
     language = db.Column(db.String(10))
     created = db.Column(db.DateTime)
 
-    # company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
-    # company = db.relationship("company", secondary="company_tag")
-
     def __init__(self, name, language, ):
         self.name = name
         self.language = language
