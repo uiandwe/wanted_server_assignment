@@ -8,6 +8,7 @@ from app import app, db
 from app.models.company import Company
 from app.models.company_info import CompanyInfo
 from app.models.tag import Tag
+from app.models.language import Language
 from app.validtors.company import CompanyPostSchema, CompanyGetSchema
 
 
@@ -21,10 +22,12 @@ def get_company(companyName):
         if error:
             raise ValueError(error)
 
-        company_info = CompanyInfo.query.filter_by(name=companyName).one()
+        company_info = CompanyInfo.query.filter_by(name=companyName).first()
+        language_instance = Language.query.filter_by(name=wanted_language).first()
+
         query = {
             "company": company_info.company,
-            "language": wanted_language
+            "language": language_instance
         }
 
         instance, error = CompanyInfo.company_info_find_query(**query)
@@ -62,9 +65,10 @@ def create_company():
     if wanted_language not in company_name.keys():
         return jsonify({"error": "not found"}), 404
 
+    language_instance = Language.query.filter_by(name=wanted_language).one()
     query = {
         "name": company_name[wanted_language],
-        "language": wanted_language
+        "language": language_instance
     }
     company_info_instance, error = CompanyInfo.company_info_find_query(**query)
     if error:

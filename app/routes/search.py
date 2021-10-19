@@ -7,6 +7,7 @@ from sqlalchemy import and_
 from app import app
 from app.models.company_info import CompanyInfo
 from app.validtors.search import SearchGetSchema
+from app.models.language import Language
 
 
 @app.route('/search', methods=['get'])
@@ -22,8 +23,9 @@ def search_index():
         if error:
             raise ValueError(error)
 
+        language_instance = Language.query.filter_by(name=wanted_language).one()
         company_infos = CompanyInfo.query.filter(
-            and_(CompanyInfo.name.like('%' + search_keyword + '%'), CompanyInfo.language == wanted_language)).all()
+            and_(CompanyInfo.name.like('%' + search_keyword + '%'), CompanyInfo.language == language_instance)).all()
     except Exception as e:
         app.logger.error(e)
         return jsonify({"error": "company not found"}), 400
