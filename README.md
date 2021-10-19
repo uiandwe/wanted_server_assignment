@@ -1,5 +1,15 @@
 # 원티드 코딩 테스트
-## _The Last Markdown Editor, Ever_
+## pip 설치
+```sh
+$ 
+$ pip3 install -r requirements.txt
+```
+
+## run database - mysql
+```sh
+$ docker-compose up
+```
+
 
 ## init load data
 ```sh
@@ -39,11 +49,11 @@ ____
 - init data : https://flask.palletsprojects.com/en/2.0.x/tutorial/database/
 - pytest init data
 - 시리얼라이져
+- wanning 잡기
+- docker-compose 실행 / 테스트 
 - 테스트 추가
 - app 이름을 뭘로 해야 할까?
-- wanning 잡기
-- .env 로 디비 파라미터 빼기
-- 로깅
+- 데코레이터 가능한지 확인
 - 유틸로 뺄것들 확인하기
+
 - language 테이블 추가 -> 시간 남으면 
-- 
