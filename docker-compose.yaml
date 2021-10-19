@@ -1,0 +1,19 @@
+version: "3"
+services:
+  db:
+    image: mysql:8.0.17
+    container_name: mysql-db01
+    ports:
+        - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - /Users/Shared/data/mysql-test:/var/lib/mysql
+    expose:
+      - "3306"
+    networks:
+      - default
