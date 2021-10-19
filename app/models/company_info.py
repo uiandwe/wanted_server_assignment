@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from app import db
+from app import db, app
 
 
 class CompanyInfo(db.Model):
@@ -34,3 +34,11 @@ class CompanyInfo(db.Model):
             "tags": [tag.name for tag in self.tag]
         }
         return d
+
+    @staticmethod
+    def company_info_find_query(**query):
+        try:
+            return CompanyInfo.query.filter_by(**query).first(), False
+        except Exception as e:
+            app.logger.error(e)
+            return {"error": "company not found"}, True

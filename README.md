@@ -48,7 +48,6 @@ ____
 ## TODO
 - init data : https://flask.palletsprojects.com/en/2.0.x/tutorial/database/
 - pytest init data
-- 시리얼라이져
 - wanning 잡기
 - docker-compose 실행 / 테스트 
 - 테스트 추가

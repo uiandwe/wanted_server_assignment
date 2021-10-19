@@ -6,6 +6,7 @@ from sqlalchemy import and_
 
 from app import app
 from app.models.company_info import CompanyInfo
+from app.validtors.search import SearchGetSchema
 
 
 @app.route('/search', methods=['get'])
@@ -14,13 +15,13 @@ def search_index():
     wanted_language = request.headers.get('x-wanted-language', 'ko')
     search_keyword = parameter_dict.get('query', '')
 
-    if wanted_language == '':
-        return jsonify({"error": "require x-wanted-language"}), 404
-
-    if search_keyword == '':
-        return jsonify({"error": "not found"}), 404
-
     try:
+        valid_data = {"search_keyword": search_keyword,
+                      "wanted_language": wanted_language}
+        error = SearchGetSchema().validate(data=valid_data)
+        if error:
+            raise ValueError(error)
+
         company_infos = CompanyInfo.query.filter(
             and_(CompanyInfo.name.like('%' + search_keyword + '%'), CompanyInfo.language == wanted_language)).all()
     except Exception as e:
