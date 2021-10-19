@@ -1,7 +1,8 @@
 # 원티드 코딩 테스트
 ## pip 설치
 ```sh
-$ 
+$ virtualenv wanted_server_exam --python=python3.6
+$ source ./wanted_server_exam/bin/activate 
 $ pip3 install -r requirements.txt
 ```
 
